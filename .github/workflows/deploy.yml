@@ -1,0 +1,26 @@
+# Cole exatamente este conteúdo no editor
+
+name: Fly Deploy
+
+on:
+  # Roda esta automação toda vez que você fizer um push para a branch 'main'
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Baixa o seu código do GitHub
+      - uses: actions/checkout@v3
+
+      # 2. Instala a ferramenta do Fly.io
+      - uses: superfly/fly-actions/setup-flyctl@master
+
+      # 3. Executa o comando de deploy, usando o segredo para se autenticar
+      - name: Deploy to Fly.io
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
